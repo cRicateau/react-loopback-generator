@@ -1,7 +1,8 @@
-import React, {Component, PropType} from 'react';
-import {bindActionCreators} from 'redux';
-import {push} from 'react-router-redux';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
+import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
 
 class <%= componentName %> extends Component {
 
