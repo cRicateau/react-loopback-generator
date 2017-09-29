@@ -226,6 +226,7 @@ module.exports = generators.Base.extend({
           this.destinationPath(`client/source/containers/models/${containerFolder}/list-view/index.jsx`),
           {
             modelName: kebabCase(this.options.name),
+            modelTitleName: capitalize(lowerCase(this.options.name)),
           }
         ),
         this.fs.copy(

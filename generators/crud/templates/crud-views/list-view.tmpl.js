@@ -105,7 +105,7 @@ export class ListView extends Component {
           navigateTo={this.props.navigateTo}
           export={this.export}
           onImportChange={this.import}
-          modelBasePath="<%= modelName %>"
+          modelBasePath="<%= modelTitleName %>"
         />
         <ReactTable
           className={`${styles.table} -highlight -striped`}
