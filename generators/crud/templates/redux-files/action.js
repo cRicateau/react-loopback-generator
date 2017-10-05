@@ -6,6 +6,7 @@ import notificationCst from '../../constants/notification.json';
 import { request, getUrl } from '../networking';
 
 export default {
+
   find(params) {
     return dispatch => {
       dispatch(this.findRequest());
@@ -18,6 +19,7 @@ export default {
         });
     };
   },
+
   findOne(idToFind) {
     return dispatch => {
       dispatch(request(`<%= apiUrl %>/${idToFind}`))
@@ -30,6 +32,7 @@ export default {
         });
     };
   },
+
   create(params) {
     return dispatch =>
       dispatch(
@@ -46,6 +49,7 @@ export default {
           dispatch(this.notifyError('notification.create.error'));
         });
   },
+
   edit(params, id) {
     return dispatch =>
       dispatch(
@@ -61,6 +65,7 @@ export default {
           dispatch(this.notifyError('notification.edit.error'));
         });
   },
+
   delete(id, modelKeyId) {
     return dispatch =>
       dispatch(
@@ -74,6 +79,7 @@ export default {
           dispatch(this.notifyError('notification.delete.error'));
         });
   },
+
   import(file) {
     return dispatch => {
       const data = new FormData();
@@ -102,56 +108,92 @@ export default {
         });
     };
   },
+
   findRequest() {
     return {
       type: cst.FIND_REQUEST,
     };
   },
+
   findSuccess(data) {
     return {
       type: cst.FIND_SUCCESS,
       payload: data,
     };
   },
+
   findError(error) {
     return {
       type: cst.FIND_ERROR,
       payload: error,
     };
   },
+
   deleteSuccess(idToDelete, modelKeyId) {
     return {
       type: cst.DELETE_ELEMENT,
       payload: { id: idToDelete, modelKeyId },
     };
   },
+
   notifySuccess(message) {
     return {
       type: notificationCst.OPEN,
       payload: { message, notificationType: notificationCst.success },
     };
   },
+
   notifyError(message) {
     return {
       type: notificationCst.OPEN,
       payload: { message, notificationType: notificationCst.error },
     };
   },
+
   errorPopIn(message) {
     return {
       type: cst.ERROR_POPIN,
       payload: { message },
     };
   },
+
   export(authentication) {
     return () => {
       window.location = `<%= apiUrl %>/export?access_token=${authentication.id}`;
     };
   },
+
   setLoading() {
     return { type: cst.LOADING_ON };
   },
+
   unsetLoading() {
     return { type: cst.LOADING_OFF };
   },
+
+  countRequest() {
+    return {
+      type: cst.COUNT_REQUEST,
+    };
+  },
+
+  countSuccess(count) {
+    return {
+      type: cst.COUNT_SUCCESS,
+      count,
+    };
+  },
+
+  count(params) {
+    return dispatch => {
+      dispatch(this.countRequest());
+      dispatch(
+        request(getUrl(`<%= apiUrl %>/count`, params)),
+      ).then(response => {
+        const { count } = response.data;
+        dispatch(this.countSuccess(count));
+      });
+    };
+  },
+
 };

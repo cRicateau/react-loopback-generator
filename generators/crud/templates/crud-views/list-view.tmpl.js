@@ -24,9 +24,12 @@ const mapStateToProps = state => {
   return {
     authentication: state.authentication,
     data: state.models[routeName].list,
-    loading: state.models[routeName].loading,
     errorPopinIsOpen: state.models[routeName].errorPopinIsOpen,
     errorImportList: state.models[routeName].errorImportList,
+    dataCount: state.models[routeName].count, 
+    loading: 
+      state.models[routeName].loading || 
+      state.models[routeName].countLoading,
     routeName,
     modelName,
     model,
@@ -36,9 +39,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getList: () => {
-    dispatch(modelActions.find());
-  },
+  getList: params => dispatch(modelActions.find(params)),
+  count: params => dispatch(modelActions.count(params)),
   deleteItem: (id, modelKeyIdentifier) => {
     dispatch(modelActions.delete(id, modelKeyIdentifier));
   },
