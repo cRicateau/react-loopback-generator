@@ -4,5 +4,7 @@
   "FIND_ERROR": "<%= actionPrefix %>/FIND_ERROR",
   "DELETE_ELEMENT": "<%= actionPrefix %>/DELETE_ELEMENT",
   "LOADING_ON": "<%= actionPrefix %>/LOADING_ON",
-  "LOADING_OFF": "<%= actionPrefix %>/LOADING_OFF"
+  "LOADING_OFF": "<%= actionPrefix %>/LOADING_OFF",
+  "ERROR_POPIN": "<%= actionPrefix %>/ERROR_POPIN",
+  "CANCEL_ERROR_POPIN": "<%= actionPrefix %>/CANCEL_ERROR_POPIN"
 }

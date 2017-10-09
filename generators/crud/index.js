@@ -78,7 +78,7 @@ module.exports = generators.Base.extend({
           },
           properties: {},
         }
-  
+
         for (const property of model.properties) {
           modelDefinition.properties[property.name]={
             type: property.type,
@@ -101,7 +101,7 @@ module.exports = generators.Base.extend({
             "public": true
           }
         }
-        
+
         const newModelConfig = Object.assign({}, modelConfig, newModel);
         this.fs.writeJSON(this.destinationPath(LoopbackModelsConfigPath), newModelConfig);
       });
@@ -247,6 +247,7 @@ module.exports = generators.Base.extend({
             {
               modelName: kebabCase(model.name),
               modelTitleName: capitalize(lowerCase(model.name)),
+              actionPrefix: model.name.toUpperCase(),
             }
           ),
           this.fs.copy(

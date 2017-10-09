@@ -10,6 +10,8 @@ describe('[Reducer] <%= reducerFileName %> Reducer', () => {
       isLoaded: false,
       error: null,
       list: [],
+      errorPopinIsOpen: false,
+      errorImportList: [],
     });
   });
 
@@ -20,6 +22,8 @@ describe('[Reducer] <%= reducerFileName %> Reducer', () => {
       isLoaded: false,
       error: null,
       list: [],
+      errorPopinIsOpen: false,
+      errorImportList: [],
     });
   });
 
@@ -30,6 +34,8 @@ describe('[Reducer] <%= reducerFileName %> Reducer', () => {
       isLoaded: true,
       error: null,
       list: undefined,
+      errorPopinIsOpen: false,
+      errorImportList: [],
     });
   });
 
@@ -40,6 +46,8 @@ describe('[Reducer] <%= reducerFileName %> Reducer', () => {
       isLoaded: false,
       error: undefined,
       list: [],
+      errorPopinIsOpen: false,
+      errorImportList: [],
     });
   });
 

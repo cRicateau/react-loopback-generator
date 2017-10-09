@@ -13,13 +13,14 @@ describe('[Component] ListView', () => {
   const defaultProps = {
     data: [],
     loading: false,
-    userHasEditRights: true,
     getList: () => {},
     import: () => {},
     export: () => {},
     deleteItem: () => {},
     navigateTo: () => {},
     routeName: 'referentiel-ae',
+    errorPopinIsOpen: false,
+    errorImportList: [],
     intl: {
       formatMessage: obj => obj.id,
     },
@@ -50,21 +51,13 @@ describe('[Component] ListView', () => {
 
     it('should render a ReactTable component to display the data', () => {
       const { shallowWrapper } = setup();
-      const table = shallowWrapper.find(ReactTable);
-      expect(table.length).to.equal(1);
-      expect(table.prop('columns').length).to.equal(1);
+      expect(shallowWrapper.find(ReactTable).length).to.equal(1);
     });
 
     it('should render a Dialog component', () => {
       const { shallowWrapper } = setup();
       const dialogInstance = shallowWrapper.find(Dialog);
-      expect(dialogInstance.length).to.equal(1);
-    });
-
-    it('should render ReactTable with no columns if user cannot edit model', () => {
-      const { shallowWrapper } = setup({ userHasEditRights: false });
-      const table = shallowWrapper.find(ReactTable);
-      expect(table.prop('columns').length).to.equal(0);
+      expect(dialogInstance.length).to.equal(2);
     });
   });
 });

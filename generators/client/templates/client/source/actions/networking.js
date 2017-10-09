@@ -53,6 +53,7 @@ export function request(url, options) {
       }
       const err = new Error(response.error ? response.error.name : JSON.stringify(response));
       err.data = response;
+      err.statusCode = status;
       throw err;
     });
   };

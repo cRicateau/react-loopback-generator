@@ -92,9 +92,13 @@ export default {
           dispatch(this.unsetLoading());
           dispatch(this.notifySuccess('notification.import.success'));
         })
-        .catch(() => {
+        .catch(err => {
           dispatch(this.unsetLoading());
-          dispatch(this.notifyError('notification.import.error'));
+          if (err.statusCode === 400) {
+            dispatch(this.errorPopIn(err.data));
+          } else {
+            dispatch(this.notifyError('notification.import.error'));
+          }
         });
     };
   },
@@ -131,6 +135,12 @@ export default {
     return {
       type: notificationCst.OPEN,
       payload: { message, notificationType: notificationCst.error },
+    };
+  },
+  errorPopIn(message) {
+    return {
+      type: cst.ERROR_POPIN,
+      payload: { message },
     };
   },
   export(authentication) {

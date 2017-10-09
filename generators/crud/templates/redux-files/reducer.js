@@ -5,6 +5,8 @@ const initialState = {
   isLoaded: false,
   error: null,
   list: [],
+  errorPopinIsOpen: false,
+  errorImportList: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -35,6 +37,17 @@ export default function reducer(state = initialState, action) {
         list: state.list.filter(
           el => el[action.payload.modelKeyId] !== action.payload.id,
         ),
+      };
+    case cst.ERROR_POPIN:
+      return {
+        ...state,
+        errorPopinIsOpen: true,
+        errorImportList: action.payload.message,
+      };
+    case cst.CANCEL_ERROR_POPIN:
+      return {
+        ...state,
+        errorPopinIsOpen: false,
       };
     case cst.LOADING_ON:
       return {

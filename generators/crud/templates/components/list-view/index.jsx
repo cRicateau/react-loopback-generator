@@ -69,6 +69,10 @@ export default class ListView extends Component {
     this.props.import(file);
   };
 
+  handleCloseErrorPopin = () => {
+    this.props.cancelErrorPopin();
+  };
+
   render() {
     const formatMessage = this.props.intl.formatMessage;
     const actions = [
@@ -90,6 +94,23 @@ export default class ListView extends Component {
         }}
       />,
     ];
+
+    const errorPopinActions = [
+      <FlatButton
+        label={formatMessage({ id: 'common.action.ok' })}
+        onClick={this.handleCloseErrorPopin}
+        keyboardFocused={true}
+      />,
+    ];
+
+    const listOfErrorForPopinDisplay = function(ErrorArray) {
+      return ErrorArray.map(el => (
+        <li key={el.id}>
+          {formatMessage({ id: 'error.import.type' })} {el.type}
+          {formatMessage({ id: 'error.import.line' })} {el.line}
+        </li>
+      ));
+    };
 
     return (
       <div className={styles.container}>
@@ -126,6 +147,17 @@ export default class ListView extends Component {
         >
           {formatMessage({ id: 'list.delete_popin.warning_text' })}
         </Dialog>
+        <Dialog
+          title={formatMessage({ id: 'list.error_popin.title' })}
+          actions={errorPopinActions}
+          modal={false}
+          onRequestClose={this.handleCloseErrorPopin}
+          open={this.props.errorPopinIsOpen}
+          autoScrollBodyContent={true}
+        >
+          <b>{formatMessage({ id: 'list.error_popin.text' })}</b>
+          {listOfErrorForPopinDisplay(this.props.errorImportList)}
+        </Dialog>
       </div>
     );
   }
@@ -138,8 +170,11 @@ ListView.propTypes = {
     formatMessage: PropTypes.func.isRequired,
   }).isRequired,
   loading: PropTypes.bool.isRequired,
+  errorPopinIsOpen: PropTypes.bool.isRequired,
+  errorImportList: PropTypes.array.isRequired, // eslint-disable-line
   navigateTo: PropTypes.func.isRequired,
   deleteItem: PropTypes.func.isRequired,
+  cancelErrorPopin: PropTypes.func.isRequired,
   export: PropTypes.func.isRequired,
   import: PropTypes.func.isRequired,
   getList: PropTypes.func.isRequired,
@@ -147,5 +182,5 @@ ListView.propTypes = {
   modelKeyId: PropTypes.string,
   routeName: PropTypes.string.isRequired,
   modelName: PropTypes.string.isRequired,
-  userHasEditRights: PropTypes.bool.isRequired,
+  userPerimeters: PropTypes.arrayOf(PropTypes.string),
 };

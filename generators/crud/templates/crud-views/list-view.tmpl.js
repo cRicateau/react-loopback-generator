@@ -25,6 +25,8 @@ const mapStateToProps = state => {
     authentication: state.authentication,
     data: state.models[routeName].list,
     loading: state.models[routeName].loading,
+    errorPopinIsOpen: state.models[routeName].errorPopinIsOpen,
+    errorImportList: state.models[routeName].errorImportList,
     routeName,
     modelName,
     model,
@@ -45,6 +47,9 @@ const mapDispatchToProps = dispatch => ({
   },
   import: file => {
     dispatch(modelActions.import(file));
+  },
+  cancelErrorPopin: () => {
+    dispatch({ type: '<%= actionPrefix %>/CANCEL_ERROR_POPIN' });
   },
   navigateTo: path => {
     dispatch(push(path));
