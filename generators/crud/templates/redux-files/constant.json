@@ -3,6 +3,8 @@
   "FIND_SUCCESS": "<%= actionPrefix %>/FIND_SUCCESS",
   "FIND_ERROR": "<%= actionPrefix %>/FIND_ERROR",
   "DELETE_ELEMENT": "<%= actionPrefix %>/DELETE_ELEMENT",
+  "COUNT_REQUEST": "<%= actionPrefix %>/COUNT_REQUEST",
+  "COUNT_SUCCESS": "<%= actionPrefix %>/COUNT_SUCCESS",
   "LOADING_ON": "<%= actionPrefix %>/LOADING_ON",
   "LOADING_OFF": "<%= actionPrefix %>/LOADING_OFF",
   "ERROR_POPIN": "<%= actionPrefix %>/ERROR_POPIN",

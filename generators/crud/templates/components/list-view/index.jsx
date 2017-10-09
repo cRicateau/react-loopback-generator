@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { map } from 'lodash';
+import { map, debounce } from 'lodash';
 
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
@@ -16,6 +16,11 @@ import styles from './styles.css';
 export default class ListView extends Component {
   constructor(props, context) {
     super(props, context);
+    this.state = {
+      deletePopinIsOpen: false,
+      elementIdToDelete: null,
+      pageSize: -1,
+    };
 
     const properties = Object.keys(this.props.model.properties);
     const modelColumns = map(properties, property => ({
@@ -43,14 +48,6 @@ export default class ListView extends Component {
 
     this.tableColumns = [...modelColumns, ...customColumns];
 
-    this.state = {
-      deletePopinIsOpen: false,
-      elementIdToDelete: null,
-    };
-  }
-
-  componentWillMount() {
-    this.props.getList();
   }
 
   setElementToDelete = id => {
@@ -71,9 +68,49 @@ export default class ListView extends Component {
 
   handleCloseErrorPopin = () => {
     this.props.cancelErrorPopin();
+  }
+
+  fetchData = reactTableState => {
+    const { sorted, filtered } = reactTableState;
+    let params = {
+      'filter[limit]': reactTableState.pageSize,
+      'filter[skip]': reactTableState.page * reactTableState.pageSize,
+    };
+
+    let propertyName, order, customSort, value, customFilter;
+
+    if (sorted.length !== 0) {
+      reactTableState.sorted.forEach((filter, index) => {
+        propertyName = filter.id;
+        order = filter.desc ? 'DESC' : 'ASC';
+        customSort = `${propertyName} ${order}`;
+        params = { ...params, [`filter[order][${index}]`]: customSort };
+      });
+    }
+
+    if (filtered.length !== 0) {
+      reactTableState.filtered.forEach(filter => {
+        propertyName = filter.id;
+        value = filter.value;
+        params = {
+          ...params,
+          [`filter[where][${propertyName}][regexp]`]: `/${value}.?/`,
+        };
+        customFilter = {
+          [`where[${propertyName}][regexp]`]: `/${value}.?/`,
+        };
+      });
+    }
+
+    this.props.getList(params);
+    this.props.count(customFilter || '');
+    this.setState({
+      pageSize: reactTableState.pageSize,
+    });
   };
 
   render() {
+    const pages = Math.ceil(this.props.dataCount / this.state.pageSize);
     const formatMessage = this.props.intl.formatMessage;
     const actions = [
       <FlatButton
@@ -125,9 +162,12 @@ export default class ListView extends Component {
         <ReactTable
           className={`${styles.table} -highlight -striped`}
           data={this.props.data}
+          pages={pages}
+          loading={this.props.loading}
+          manual
+          onFetchData={debounce(this.fetchData, 300)}
           columns={this.tableColumns}
           filterable
-          loading={this.props.loading}
           defaultPageSize={15}
           pageSizeOptions={[5, 15, 25, 50, 100]}
           previousText={formatMessage({ id: 'list.previous' })}
@@ -178,6 +218,8 @@ ListView.propTypes = {
   export: PropTypes.func.isRequired,
   import: PropTypes.func.isRequired,
   getList: PropTypes.func.isRequired,
+  count: PropTypes.func.isRequired,
+  dataCount: PropTypes.number.isRequired,
   model: PropTypes.object, // eslint-disable-line
   modelKeyId: PropTypes.string,
   routeName: PropTypes.string.isRequired,
