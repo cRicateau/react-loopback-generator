@@ -47,7 +47,6 @@ export default class ListView extends Component {
     }
 
     this.tableColumns = [...modelColumns, ...customColumns];
-
   }
 
   setElementToDelete = id => {
@@ -57,8 +56,19 @@ export default class ListView extends Component {
     });
   };
 
-  export = () => {
-    this.props.export(this.props.authentication);
+  getPopinContent = errorArray => {
+    const formatMessage = this.props.intl.formatMessage;
+    return errorArray.map(error => (
+      <li key={`${error.line}-${error.column}`}>
+        {formatMessage({ id: 'error.import.type' })} {error.type}
+        {formatMessage({ id: 'error.import.line' })} {error.line}
+        {formatMessage({ id: 'error.import.column' })} {error.column}
+      </li>
+    ));
+  };
+
+  handleCloseErrorPopin = () => {
+    this.props.cancelErrorPopin();
   };
 
   import = uploadEvent => {
@@ -66,9 +76,9 @@ export default class ListView extends Component {
     this.props.import(file);
   };
 
-  handleCloseErrorPopin = () => {
-    this.props.cancelErrorPopin();
-  }
+  export = () => {
+    this.props.export(this.props.authentication);
+  };
 
   fetchData = reactTableState => {
     const { sorted, filtered } = reactTableState;
@@ -110,17 +120,27 @@ export default class ListView extends Component {
   };
 
   render() {
-    const pages = Math.ceil(this.props.dataCount / this.state.pageSize);
     const formatMessage = this.props.intl.formatMessage;
+    const {
+      errorImportList,
+      routeName,
+      userHasEditRights,
+      modelName,
+      navigateTo,
+      loading,
+      data,
+      dataCount,
+      modelKeyId,
+      deleteItem,
+      errorPopinIsOpen,
+    } = this.props;
+    const pages = Math.ceil(dataCount / this.state.pageSize);
     const actions = [
       <FlatButton
         label={formatMessage({ id: 'common.action.confirm' })}
         style={{ color: 'red' }}
         onClick={() => {
-          this.props.deleteItem(
-            this.state.elementIdToDelete,
-            this.props.modelKeyId,
-          );
+          deleteItem(this.state.elementIdToDelete, modelKeyId);
           this.setState({ deletePopinIsOpen: false, elementIdToDelete: null });
         }}
       />,
@@ -140,30 +160,21 @@ export default class ListView extends Component {
       />,
     ];
 
-    const listOfErrorForPopinDisplay = function(ErrorArray) {
-      return ErrorArray.map(el => (
-        <li key={el.id}>
-          {formatMessage({ id: 'error.import.type' })} {el.type}
-          {formatMessage({ id: 'error.import.line' })} {el.line}
-        </li>
-      ));
-    };
-
     return (
       <div className={styles.container}>
         <TableManager
-          navigateTo={this.props.navigateTo}
+          navigateTo={navigateTo}
           export={this.export}
           onImportChange={this.import}
-          modelBasePath={this.props.routeName}
-          hasEditRights={this.props.userHasEditRights}
-          modelBaseName={this.props.modelName}
+          modelBasePath={routeName}
+          hasEditRights={userHasEditRights}
+          modelBaseName={modelName}
         />
         <ReactTable
           className={`${styles.table} -highlight -striped`}
-          data={this.props.data}
+          data={data}
           pages={pages}
-          loading={this.props.loading}
+          loading={loading}
           manual
           onFetchData={debounce(this.fetchData, 300)}
           columns={this.tableColumns}
@@ -192,11 +203,11 @@ export default class ListView extends Component {
           actions={errorPopinActions}
           modal={false}
           onRequestClose={this.handleCloseErrorPopin}
-          open={this.props.errorPopinIsOpen}
+          open={errorPopinIsOpen}
           autoScrollBodyContent={true}
         >
           <b>{formatMessage({ id: 'list.error_popin.text' })}</b>
-          {listOfErrorForPopinDisplay(this.props.errorImportList)}
+          {this.getPopinContent(errorImportList)}
         </Dialog>
       </div>
     );
@@ -224,5 +235,5 @@ ListView.propTypes = {
   modelKeyId: PropTypes.string,
   routeName: PropTypes.string.isRequired,
   modelName: PropTypes.string.isRequired,
-  userPerimeters: PropTypes.arrayOf(PropTypes.string),
+  userHasEditRights: PropTypes.bool,
 };

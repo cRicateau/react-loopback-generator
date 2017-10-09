@@ -19,7 +19,6 @@ module.exports = {
       "name": 'string',
       "type": 'string',
       "required": 'boolean',
-      "id": 'boolean',
     };
   
     crudObj.map(model => {
