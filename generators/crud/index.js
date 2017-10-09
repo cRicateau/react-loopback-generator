@@ -339,7 +339,7 @@ module.exports = generators.Base.extend({
           componentName: name,
           name: routeName,
         }
-        if (!find(routes.active, route => route.name === routeName)) {
+        if (!find(routes.active, route => route.componentName === name)) {
           routes.active.push(newCrudEntry);
         };
         return this.fs.writeJSON(this.destinationPath(jsonPath), routes);
