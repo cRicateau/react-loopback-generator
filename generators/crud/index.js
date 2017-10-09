@@ -76,6 +76,7 @@ module.exports = generators.Base.extend({
               table: snakeCase(model.name)
             }
           },
+          relations: {},
           properties: {},
         }
 
@@ -83,6 +84,12 @@ module.exports = generators.Base.extend({
           modelDefinition.properties[property.name]={
             type: property.type,
             required: property.required
+          }
+          if (modelConfig && modelConfig.properties && modelConfig.properties[property.name]) {
+            modelDefinition.properties[property.name] = Object.assign(
+              modelDefinition.properties[property.name],
+              modelConfig.properties[property.name]
+            )
           }
         }
 
