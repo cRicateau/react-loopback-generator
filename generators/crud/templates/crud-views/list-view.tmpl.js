@@ -51,7 +51,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(modelActions.import(file));
   },
   cancelErrorPopin: () => {
-    dispatch({ type: '<%= actionPrefix %>/CANCEL_ERROR_POPIN' });
+    dispatch(modelActions.cancelErrorPopin());
   },
   navigateTo: path => {
     dispatch(push(path));

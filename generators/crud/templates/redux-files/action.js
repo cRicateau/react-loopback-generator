@@ -157,6 +157,10 @@ export default {
     };
   },
 
+  cancelErrorPopin() {
+    return { type: cst.CANCEL_ERROR_POPIN }
+  },
+
   export(authentication) {
     return () => {
       window.location = `<%= apiUrl %>/export?access_token=${authentication.id}`;
