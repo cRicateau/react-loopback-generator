@@ -7,6 +7,8 @@ const initialState = {
   list: [],
   errorPopinIsOpen: false,
   errorImportList: [],
+  count: 0,
+  countLoading: false,
 };
 
 export default function reducer(state = initialState, action) {
