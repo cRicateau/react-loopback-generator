@@ -31,6 +31,10 @@ export default class ListView extends Component {
       {
         Header: props.intl.formatMessage({ id: 'list.header.actions' }),
         accessor: props.modelKeyId,
+        filterable: false,
+        sortable: false,
+        headerStyle: { boxShadow: 'none' },
+        style: { textAlign: 'center' },
         Cell: row => (
           <TableActionCell
             row={row}
