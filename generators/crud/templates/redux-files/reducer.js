@@ -2,7 +2,6 @@ import cst from '../../constants/models/<%= constantFileName %>.json';
 
 const initialState = {
   loading: false,
-  isLoaded: false,
   error: null,
   list: [],
   errorPopinIsOpen: false,
@@ -24,7 +23,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         error: null,
-        isLoaded: true,
         list: action.payload,
       };
     case cst.FIND_ERROR:
@@ -60,6 +58,17 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
+      };
+    case cst.COUNT_REQUEST:
+      return {
+        ...state,
+        countLoading: true,
+      };
+    case cst.COUNT_SUCCESS:
+      return {
+        ...state,
+        count: action.count,
+        countLoading: false,
       };
     default:
       return state;

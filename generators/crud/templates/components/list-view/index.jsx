@@ -31,6 +31,10 @@ export default class ListView extends Component {
       {
         Header: props.intl.formatMessage({ id: 'list.header.actions' }),
         accessor: props.modelKeyId,
+        filterable: false,
+        sortable: false,
+        headerStyle: { boxShadow: 'none' },
+        style: { textAlign: 'center' },
         Cell: row => (
           <TableActionCell
             row={row}
@@ -82,38 +86,38 @@ export default class ListView extends Component {
 
   fetchData = reactTableState => {
     const { sorted, filtered } = reactTableState;
-    let params = {
+    let findFilter = {
       'filter[limit]': reactTableState.pageSize,
       'filter[skip]': reactTableState.page * reactTableState.pageSize,
     };
 
-    let propertyName, order, customSort, value, customFilter;
-
     if (sorted.length !== 0) {
       reactTableState.sorted.forEach((filter, index) => {
-        propertyName = filter.id;
-        order = filter.desc ? 'DESC' : 'ASC';
-        customSort = `${propertyName} ${order}`;
-        params = { ...params, [`filter[order][${index}]`]: customSort };
+        const propertyName = filter.id;
+        const order = filter.desc ? 'DESC' : 'ASC';
+        const customSort = `${propertyName} ${order}`;
+        findFilter = { ...findFilter, [`filter[order][${index}]`]: customSort };
       });
     }
 
+    let countFilter;
     if (filtered.length !== 0) {
       reactTableState.filtered.forEach(filter => {
-        propertyName = filter.id;
-        value = filter.value;
-        params = {
-          ...params,
-          [`filter[where][${propertyName}][regexp]`]: `/${value}.?/`,
+        const propertyName = filter.id;
+        const filterRegex = `/${filter.value}.?/`;
+        findFilter = {
+          ...findFilter,
+          [`filter[where][${propertyName}][regexp]`]: filterRegex,
         };
-        customFilter = {
-          [`where[${propertyName}][regexp]`]: `/${value}.?/`,
+        countFilter = {
+          ...countFilter,
+          [`where[${propertyName}][regexp]`]: filterRegex,
         };
       });
     }
 
-    this.props.getList(params);
-    this.props.count(customFilter || '');
+    this.props.getList(findFilter);
+    this.props.count(countFilter || '');
     this.setState({
       pageSize: reactTableState.pageSize,
     });

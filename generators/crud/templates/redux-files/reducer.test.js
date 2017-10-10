@@ -7,11 +7,12 @@ describe('[Reducer] <%= reducerFileName %> Reducer', () => {
     const newState = reducer(undefined, { type: 'test' });
     expect(newState).toEqual({
       loading: false,
-      isLoaded: false,
       error: null,
       list: [],
       errorPopinIsOpen: false,
       errorImportList: [],
+      count: 0,
+      countLoading: false,
     });
   });
 
@@ -19,7 +20,6 @@ describe('[Reducer] <%= reducerFileName %> Reducer', () => {
     const newState = reducer(undefined, { type: cst.FIND_REQUEST });
     expect(newState).toEqual({
       loading: true,
-      isLoaded: false,
       error: null,
       list: [],
       errorPopinIsOpen: false,
@@ -33,7 +33,6 @@ describe('[Reducer] <%= reducerFileName %> Reducer', () => {
     const newState = reducer(undefined, { type: cst.FIND_SUCCESS });
     expect(newState).toEqual({
       loading: false,
-      isLoaded: true,
       error: null,
       list: undefined,
       errorPopinIsOpen: false,
@@ -47,7 +46,6 @@ describe('[Reducer] <%= reducerFileName %> Reducer', () => {
     const newState = reducer(undefined, { type: cst.FIND_ERROR });
     expect(newState).toEqual({
       loading: false,
-      isLoaded: false,
       error: undefined,
       list: [],
       errorPopinIsOpen: false,
