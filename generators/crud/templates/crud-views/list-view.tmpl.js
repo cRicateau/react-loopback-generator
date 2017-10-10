@@ -6,6 +6,7 @@ import { push } from 'react-router-redux';
 import ListView from '../../../../components/crud-view/list-view';
 import modelActions from '../../../../actions/models/<%= modelName %>';
 import model from '../../../../../../server/models/<%= modelName %>.json';
+import getModelsIds from '../../../../services/modelKeyIds';
 
 import { canWrite } from '../../../../services/access-control.js';
 import { getUserPerimeters } from '../../../../selectors/user-perimeters.js';
@@ -13,10 +14,7 @@ import { getUserPerimeters } from '../../../../selectors/user-perimeters.js';
 const routeName = '<%= modelName %>';
 const modelName = '<%= modelTitleName %>';
 
-const modelKeyId = findKey(
-  model.properties,
-  property => property.id !== undefined,
-);
+const modelKeyIds = getModelsIds(model.properties);
 
 const mapStateToProps = state => {
   const userPerimeters = getUserPerimeters(state);
@@ -26,9 +24,9 @@ const mapStateToProps = state => {
     data: state.models[routeName].list,
     errorPopinIsOpen: state.models[routeName].errorPopinIsOpen,
     errorImportList: state.models[routeName].errorImportList,
-    dataCount: state.models[routeName].count, 
-    loading: 
-      state.models[routeName].loading || 
+    dataCount: state.models[routeName].count,
+    loading:
+      state.models[routeName].loading ||
       state.models[routeName].countLoading,
     routeName,
     modelName,

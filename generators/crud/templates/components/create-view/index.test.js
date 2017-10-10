@@ -16,7 +16,7 @@ describe('[Component] CreateView', () => {
       formatMessage: obj => obj.id,
     },
     createNewEntry: () => {},
-    modelKeyId: 'modelKeyId',
+    modelKeyIds: [],
     model: {
       name: 'modelMock',
       properties: [],

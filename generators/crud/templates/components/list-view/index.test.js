@@ -21,6 +21,7 @@ describe('[Component] ListView', () => {
     routeName: 'referentiel-ae',
     errorPopinIsOpen: false,
     errorImportList: [],
+    modelKeyIds: [],
     intl: {
       formatMessage: obj => obj.id,
     },

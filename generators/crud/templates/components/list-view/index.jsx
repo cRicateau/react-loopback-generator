@@ -30,7 +30,7 @@ export default class ListView extends Component {
     let customColumns = [
       {
         Header: props.intl.formatMessage({ id: 'list.header.actions' }),
-        accessor: props.modelKeyId,
+        accessor: props.modelKeyIds[0],
         filterable: false,
         sortable: false,
         headerStyle: { boxShadow: 'none' },
@@ -134,7 +134,7 @@ export default class ListView extends Component {
       loading,
       data,
       dataCount,
-      modelKeyId,
+      modelKeyIds,
       deleteItem,
       errorPopinIsOpen,
     } = this.props;
@@ -144,7 +144,7 @@ export default class ListView extends Component {
         label={formatMessage({ id: 'common.action.confirm' })}
         style={{ color: 'red' }}
         onClick={() => {
-          deleteItem(this.state.elementIdToDelete, modelKeyId);
+          deleteItem(this.state.elementIdToDelete, modelKeyIds[0]);
           this.setState({ deletePopinIsOpen: false, elementIdToDelete: null });
         }}
       />,
@@ -236,7 +236,7 @@ ListView.propTypes = {
   count: PropTypes.func.isRequired,
   dataCount: PropTypes.number.isRequired,
   model: PropTypes.object, // eslint-disable-line
-  modelKeyId: PropTypes.string,
+  modelKeyIds: PropTypes.arrayOf(PropTypes.string),
   routeName: PropTypes.string.isRequired,
   modelName: PropTypes.string.isRequired,
   userHasEditRights: PropTypes.bool,

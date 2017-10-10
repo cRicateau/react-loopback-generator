@@ -24,7 +24,7 @@ export default class EditView extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { modelKeyId, model, userHasEditRights } = this.props;
+    const { modelKeyIds, model, userHasEditRights } = this.props;
 
     if (!userHasEditRights) return <div />;
 
@@ -43,8 +43,8 @@ export default class EditView extends Component {
           <ModelForm
             modelProperties={model.properties}
             onSubmit={this.submitModelEdit}
-            modelKeyId={modelKeyId}
-            disableModelKeyId={true}
+            modelKeyIds={modelKeyIds}
+            disableModelKeyIds={true}
           />
         </div>
       </div>
@@ -59,7 +59,7 @@ EditView.propTypes = {
   navigateToList: PropTypes.func.isRequired,
   editEntry: PropTypes.func.isRequired,
   findEntry: PropTypes.func.isRequired,
-  modelKeyId: PropTypes.string.isRequired,
+  modelKeyIds: PropTypes.arrayOf(PropTypes.string),
   model: PropTypes.object, // eslint-disable-line
   params: PropTypes.shape({
     id: PropTypes.string.isRequired,
