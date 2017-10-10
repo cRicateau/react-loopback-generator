@@ -18,7 +18,7 @@ export default class CreateView extends Component {
 
   render() {
     const { formatMessage } = this.props.intl;
-    const { model, modelKeyId, userHasEditRights } = this.props;
+    const { model, modelKeyIds, userHasEditRights } = this.props;
 
     if (!userHasEditRights) return <div />;
 
@@ -39,8 +39,8 @@ export default class CreateView extends Component {
           <ModelForm
             modelProperties={model.properties}
             onSubmit={this.submitModelCreate}
-            modelKeyId={modelKeyId}
-            disableModelKeyId={false}
+            modelKeyIds={modelKeyIds}
+            disableModelKeyIds={false}
           />
         </div>
       </div>
@@ -54,7 +54,7 @@ CreateView.propTypes = {
   }).isRequired,
   navigateToList: PropTypes.func.isRequired,
   createNewEntry: PropTypes.func.isRequired,
-  modelKeyId: PropTypes.string.isRequired,
+  modelKeyIds: PropTypes.arrayOf(PropTypes.string),
   model: PropTypes.object, // eslint-disable-line
   userHasEditRights: PropTypes.bool.isRequired,
 };

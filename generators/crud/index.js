@@ -181,6 +181,11 @@ module.exports = generators.Base.extend({
         this.destinationPath(`client/source/services/access-control.js`)
       );
 
+      this.fs.copyTpl(
+        this.templatePath('services/modelKeyIds.js'),
+        this.destinationPath(`client/source/services/modelKeyIds.js`)
+      );
+
       return this.fs.copyTpl(
         this.templatePath('selectors/user-perimeters.js'),
         this.destinationPath(`client/source/selectors/user-perimeters.js`)

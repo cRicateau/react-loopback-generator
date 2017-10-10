@@ -17,7 +17,7 @@ describe('[Component] EditView', () => {
     navigateToList: () => {},
     editEntry: () => {},
     findEntry: () => {},
-    modelKeyId: 'modelKeyId',
+    modelKeyIds: [],
     params: {
       id: '1',
     },
