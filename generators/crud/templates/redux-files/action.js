@@ -6,7 +6,6 @@ import notificationCst from '../../constants/notification.json';
 import { request, getUrl } from '../networking';
 
 export default {
-
   find(params) {
     return dispatch => {
       dispatch(this.findRequest());
@@ -21,7 +20,7 @@ export default {
   },
 
   findOne(idToFind) {
-    return dispatch => {
+    return dispatch =>
       dispatch(request(`<%= apiUrl %>/${idToFind}`))
         .then(response => {
           const { data } = response;
@@ -30,7 +29,6 @@ export default {
         .catch(() => {
           dispatch(this.notifyError('notification.error.not_found'));
         });
-    };
   },
 
   create(params) {
@@ -68,9 +66,7 @@ export default {
 
   delete(id, modelKeyId) {
     return dispatch =>
-      dispatch(
-        request(`<%= apiUrl %>/${id}`, { method: 'DELETE' })
-      )
+      dispatch(request(`<%= apiUrl %>/${id}`, { method: 'DELETE' }))
         .then(() => {
           dispatch(this.deleteSuccess(id, modelKeyId));
           dispatch(this.notifySuccess('notification.delete.success'));
@@ -158,7 +154,7 @@ export default {
   },
 
   cancelErrorPopin() {
-    return { type: cst.CANCEL_ERROR_POPIN }
+    return { type: cst.CANCEL_ERROR_POPIN };
   },
 
   export(authentication) {
@@ -192,7 +188,7 @@ export default {
   count(params) {
     return dispatch => {
       dispatch(this.countRequest());
-      dispatch(
+      return dispatch(
         request(getUrl(`<%= apiUrl %>/count`, params)),
       ).then(response => {
         const { count } = response.data;
@@ -200,5 +196,4 @@ export default {
       });
     };
   },
-
 };

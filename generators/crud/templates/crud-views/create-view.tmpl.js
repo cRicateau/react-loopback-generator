@@ -1,7 +1,6 @@
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { findKey } from 'lodash';
 
 import CreateView from '../../../../components/crud-view/create-view';
 import model from '../../../../../../server/models/<%= modelName %>.json';
