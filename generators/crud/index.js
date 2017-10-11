@@ -91,6 +91,13 @@ module.exports = generators.Base.extend({
               modelConfig.properties[property.name]
             )
           }
+
+          if (modelConfig && modelConfig.mixins) {
+            modelDefinition.mixins = Object.assign(
+              modelDefinition.mixins,
+              modelConfig.mixins
+            )
+          }
         }
 
         const updatedModel = Object.assign({}, modelConfig, modelDefinition)
