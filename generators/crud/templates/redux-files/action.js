@@ -163,7 +163,8 @@ export default {
 
   export(authentication) {
     return () => {
-      window.location = `<%= apiUrl %>/export?access_token=${authentication.id}`;
+      window.location.href = `<%= apiUrl %>/export?access_token=${authentication.id}`;
+      return Promise.resolve();
     };
   },
 
