@@ -16,7 +16,7 @@ export default class EditView extends Component {
 
   submitModelEdit = values => {
     const updatedModel = { ...values };
-    delete updatedModel[this.props.modelKeyId]; // you cannot try to modify the primary key
+    delete updatedModel[this.props.modelKeyIds[0]]; // you cannot try to modify the primary key
     this.props.editEntry(updatedModel, this.props.params.id);
   };
 
