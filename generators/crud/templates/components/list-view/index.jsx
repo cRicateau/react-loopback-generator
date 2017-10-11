@@ -100,19 +100,30 @@ export default class ListView extends Component {
       });
     }
 
-    let countFilter;
+    let countFilter, value;
     if (filtered.length !== 0) {
       reactTableState.filtered.forEach(filter => {
         const propertyName = filter.id;
-        const filterRegex = `/${filter.value}.?/`;
-        findFilter = {
-          ...findFilter,
-          [`filter[where][${propertyName}][regexp]`]: filterRegex,
-        };
-        countFilter = {
-          ...countFilter,
-          [`where[${propertyName}][regexp]`]: filterRegex,
-        };
+        value = parseFloat(filter.value) || filter.value;
+        if (isFinite(value)) {
+          findFilter = {
+            ...findFilter,
+            [`filter[where][${propertyName}][like]`]: `%${value}%`,
+          };
+          countFilter = {
+            [`where[${propertyName}][like]`]: `%${value}%`,
+          };
+        } else {
+          const filterRegex = `/${filter.value}.?/`;
+          findFilter = {
+            ...findFilter,
+            [`filter[where][${propertyName}][regexp]`]: filterRegex,
+          };
+          countFilter = {
+            ...countFilter,
+            [`where[${propertyName}][regexp]`]: filterRegex,
+          };
+        }
       });
     }
 
