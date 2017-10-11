@@ -1,11 +1,10 @@
 .textField {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 60%;
-  }
-  
-  .label {
-    margin-right: '15px';
-  }
-  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 60%;
+}
+
+.label {
+  margin-right: '15px';
+}
