@@ -1,6 +1,5 @@
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { findKey } from 'lodash';
 import { push } from 'react-router-redux';
 
 import ListView from '../../../../components/crud-view/list-view';
@@ -26,12 +25,11 @@ const mapStateToProps = state => {
     errorImportList: state.models[routeName].errorImportList,
     dataCount: state.models[routeName].count,
     loading:
-      state.models[routeName].loading ||
-      state.models[routeName].countLoading,
+      state.models[routeName].loading || state.models[routeName].countLoading,
     routeName,
     modelName,
     model,
-    modelKeyId,
+    modelKeyIds,
     userHasEditRights,
   };
 };

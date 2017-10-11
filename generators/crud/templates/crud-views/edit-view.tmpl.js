@@ -1,6 +1,5 @@
 import { injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { findKey } from 'lodash';
 import { push } from 'react-router-redux';
 
 import EditView from '../../../../components/crud-view/edit-view';
