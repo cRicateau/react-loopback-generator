@@ -4,7 +4,7 @@ const importService = require('../services/excel-import');
 const fileUploadService = require('../services/file-upload');
 
 module.exports = function(Model) {
-  const successHttpCode = 200;
+  const successHttpCode = 204;
   const badRequestHttpCode = 400;
   const unprocessableHttpCode = 422;
 
@@ -29,7 +29,7 @@ module.exports = function(Model) {
       })
       .then(() => fileUploadService.rejectIfMimetypeIsNotAuthorized(file.buffer))
       .then(() => Model.handleFile(file.buffer))
-      .then(() => res.send(successHttpCode))
+      .then(() => res.status(successHttpCode).send())
       .catch(error => {
         if (error.errorList) {
           return res.status(error.status).send(error.errorList);
