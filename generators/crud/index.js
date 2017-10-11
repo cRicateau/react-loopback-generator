@@ -191,6 +191,17 @@ module.exports = generators.Base.extend({
         this.destinationPath(`client/source/selectors/user-perimeters.js`)
       );
     },
+    createModelForm: function()  {
+      return Promise.all([
+        { src: 'components/model-form/index.jsx', dest: 'client/source/components/crud-view/model-form/index.jsx'},
+        { src: 'components/model-form/model-form.test.js', dest: 'client/source/components/crud-view/model-form/model-form.test.js'},
+        { src: 'components/model-form/selector.js', dest: 'client/source/components/crud-view/model-form/selector.js'},
+        { src: 'components/model-form/selector.test.js', dest: 'client/source/components/crud-view/model-form/selector.test.js'},
+        { src: 'components/model-form/styles.css', dest: 'client/source/components/crud-view/model-form/styles.css'},
+      ].map(file => {
+        return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
+      }));
+    },
     createConstant: function () {
       this.options.models.map(model => {
         const constantFileName = kebabCase(model.name);
