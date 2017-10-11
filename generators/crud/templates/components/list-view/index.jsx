@@ -114,7 +114,7 @@ export default class ListView extends Component {
             [`where[${propertyName}][like]`]: `%${value}%`,
           };
         } else {
-          const filterRegex = `/${filter.value}.?/`;
+          const filterRegex = `/${filter.value}.?/i`;
           findFilter = {
             ...findFilter,
             [`filter[where][${propertyName}][regexp]`]: filterRegex,
