@@ -64,19 +64,26 @@ module.exports = function(Model) {
     return true;
   };
 
-  Model.isRowInvalid = (key, row) => {
-    return Model.getPropertyType(key) === 'Number' &&
-      !importService.isNumeric(row[key]);
+  Model.isRowInvalidType = (key, row) => {
+    return Model.getPropertyType(key) === 'Number' && !importService.isNumeric(row[key]);
+  };
+
+  Model.isRowInvalidLength = (key, row) => {
+    return (row[key].length > Model.definition.properties[key].length);
   };
 
   Model.validateData = function(rows) {
     const errorList = [];
     rows.forEach((row, lineIndex) => {
       for (const key of Object.keys(row)) {
-        if (Model.isRowInvalid(key, row)) {
-          const offset = 2;
-          const userFriendlyRowIndex = lineIndex + offset;
+        const offset = 2;
+        const userFriendlyRowIndex = lineIndex + offset;
+
+        if (Model.isRowInvalidType(key, row)) {
           errorList.push({ type: 'Format', line: userFriendlyRowIndex, column: key });
+        }
+        if (Model.isRowInvalidLength(key, row)) {
+          errorList.push({ type: 'Longueur', line: userFriendlyRowIndex, column: key });
         }
       }
     });
