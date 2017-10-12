@@ -241,20 +241,12 @@ module.exports = generators.Base.extend({
         )
       ]);
     },
-    createIndexFile: function() {
+    createRootFiles: function() {
       return Promise.all([
+          { src: 'routes.jsx', dest: 'client/source/routes.jsx'},
           {src: 'crud-views/index.tmpl.js', dest: 'client/source/containers/models/index.js' },
           {src: 'redux-files/index.js', dest: 'client/source/reducers/index.js'}
         ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
-      )
-    },
-    createRootFiles: function() {
-      return Promise.all([
-        { src: 'index.dev.jsx', dest: 'client/source/index.dev.jsx'},
-        { src: 'index.jsx', dest: 'client/source/index.jsx'},
-        { src: 'main.jsx', dest: 'client/source/main.jsx'},
-        { src: 'routes.jsx', dest: 'client/source/routes.jsx'}]
-        .map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
       )
     },
     createConstant: function () {
