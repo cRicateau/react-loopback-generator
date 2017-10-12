@@ -248,7 +248,7 @@ module.exports = generators.Base.extend({
         ),
         this.fs.copyTpl(
           this.templatePath('components/side-bar/index.test.js'),
-          this.destinationPath('client/source/components/side-bar/index.jsx')
+          this.destinationPath('client/source/components/side-bar/index.test.jsx')
         )
       ]);
     },
