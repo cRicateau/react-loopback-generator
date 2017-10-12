@@ -66,7 +66,9 @@ module.exports = generators.Base.extend({
           plural: kebabCase(model.plural),
           base: "PersistedModel",
           mixins: {
-            DisableRemoteMethods: {},
+            DisableRemoteMethods: {
+              'except': ['find', 'findById', 'create', 'deleteById', 'replaceById', 'count']
+            },
             ExcelExport: {},
             ExcelImport: {}
           },
