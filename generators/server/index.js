@@ -60,7 +60,6 @@ module.exports = generators.Base.extend({
         'serve-favicon': '2.0.1',
         'strong-error-handler': '1.0.1',
         'winston': '2.3.0',
-        'mmmagic': '0.4.5',
       },
       devDependencies:{
         'nodemon': '1.11.0',
