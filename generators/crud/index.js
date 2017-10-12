@@ -218,7 +218,7 @@ module.exports = generators.Base.extend({
         this.destinationPath(`client/source/selectors/user-perimeters.js`)
       );
     },
-    createModelForm: function()  {
+    createModelForm: function() {
       return Promise.all([
         { src: 'components/model-form/index.jsx', dest: 'client/source/components/crud-view/model-form/index.jsx'},
         { src: 'components/model-form/model-form.test.js', dest: 'client/source/components/crud-view/model-form/model-form.test.js'},
@@ -228,6 +228,35 @@ module.exports = generators.Base.extend({
       ].map(file => {
         return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
       }));
+    },
+    createSideBar: function() {
+      return Promise.all([
+        this.fs.copyTpl(
+          this.templatePath('components/side-bar/index.jsx'),
+          this.templatePath('client/source/components/side-bar/index.jsx')
+        ),
+        this.fs.copyTpl(
+          this.templatePath('components/side-bar/index.test.js'),
+          this.templatePath('client/source/components/side-bar/index.jsx')
+        )
+      ]);
+    },
+    createIndexFile: function() {
+      return Promise.all([
+        this.fs.copyTpl(
+          this.templatePath('crud-views/index.tmpl.js'),
+          this.templatePath('client/source/containers/models/index.js')
+        )
+      ]);
+    },
+    createRootFiles: function() {
+      return Promise.all([
+        { src: 'index.dev.jsx', dest: 'client/source/index.dev.jsx'},
+        { src: 'index.jsx', dest: 'client/source/index.jsx'},
+        { src: 'main.jsx', dest: 'client/source/main.jsx'},
+        { src: 'routes.jsx', dest: 'client/source/routes.jsx'}
+      ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
+      )
     },
     createConstant: function () {
       this.options.models.map(model => {
