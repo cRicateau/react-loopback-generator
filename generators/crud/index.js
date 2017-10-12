@@ -233,29 +233,28 @@ module.exports = generators.Base.extend({
       return Promise.all([
         this.fs.copyTpl(
           this.templatePath('components/side-bar/index.jsx'),
-          this.templatePath('client/source/components/side-bar/index.jsx')
+          this.destinationPath('client/source/components/side-bar/index.jsx')
         ),
         this.fs.copyTpl(
           this.templatePath('components/side-bar/index.test.js'),
-          this.templatePath('client/source/components/side-bar/index.jsx')
+          this.destinationPath('client/source/components/side-bar/index.jsx')
         )
       ]);
     },
     createIndexFile: function() {
-      return Promise.all([
-        this.fs.copyTpl(
+      console.log('create Index')
+      return this.fs.copyTpl(
           this.templatePath('crud-views/index.tmpl.js'),
-          this.templatePath('client/source/containers/models/index.js')
-        )
-      ]);
+          this.destinationPath('client/source/containers/models/index.js')
+      );
     },
     createRootFiles: function() {
       return Promise.all([
         { src: 'index.dev.jsx', dest: 'client/source/index.dev.jsx'},
         { src: 'index.jsx', dest: 'client/source/index.jsx'},
         { src: 'main.jsx', dest: 'client/source/main.jsx'},
-        { src: 'routes.jsx', dest: 'client/source/routes.jsx'}
-      ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
+        { src: 'routes.jsx', dest: 'client/source/routes.jsx'}]
+        .map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
       )
     },
     createConstant: function () {
@@ -270,7 +269,7 @@ module.exports = generators.Base.extend({
         );
       })
     },
-    createAction: function () {
+    createModelsActions: function () {
       this.options.models.map(model => {
         const actionFileName = kebabCase(model.name);
         const constantFileName = kebabCase(model.name);
@@ -292,6 +291,13 @@ module.exports = generators.Base.extend({
           templateVariables
         );
       });
+    },
+    createActions: function() {
+      return Promise.all([
+        { src: 'redux-files/networking.js', dest: 'actions/networking.js'},
+        { src: 'redux-files/networking.test.js', dest: 'actions/networking.test.js'}]
+        .map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
+      )
     },
     createReducer: function () {
       this.options.models.map(model => {
