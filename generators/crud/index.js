@@ -242,11 +242,11 @@ module.exports = generators.Base.extend({
       ]);
     },
     createIndexFile: function() {
-      console.log('create Index')
-      return this.fs.copyTpl(
-          this.templatePath('crud-views/index.tmpl.js'),
-          this.destinationPath('client/source/containers/models/index.js')
-      );
+      return Promise.all([
+          {src: 'crud-views/index.tmpl.js', dest: 'client/source/containers/models/index.js' },
+          {src: 'redux-files/index.js', dest: 'client/source/reducers/index.js'}
+        ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
+      )
     },
     createRootFiles: function() {
       return Promise.all([
