@@ -424,4 +424,15 @@ module.exports = generators.Base.extend({
       })
     },
   },
+  install: function() {
+    this.spawnCommandSync('npm', [
+      'install',
+      'multer',
+      'mmmagic',
+      'xlsx',
+      'redux-form',
+      'redux-form-material-ui',
+      '--save'
+    ]);
+  }
 });
