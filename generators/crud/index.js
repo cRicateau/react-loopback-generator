@@ -229,6 +229,17 @@ module.exports = generators.Base.extend({
         return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
       }));
     },
+    createTableComponents: function () {
+      return Promise.all([
+        { src: 'components/table-components/table-action-cell.jsx', dest: 'client/source/components/crud-view/table-action-cell.jsx' },
+        { src: 'components/table-components/table-action-cell.test.js', dest: 'client/source/components/crud-view/table-action-cell.test.js'},
+        { src: 'components/table-components/table-manager.jsx', dest: 'client/source/components/crud-view/table-manager.jsx'},
+        { src: 'components/table-components/table-manager.test.js', dest: 'client/source/components/crud-view/table-manager.test.js'},
+        { src: 'components/table-components/table-manager.css', dest: 'client/source/components/crud-view/table-manager.css'},
+      ].map(file => {
+        return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
+      }));
+    },
     createSideBar: function() {
       return Promise.all([
         this.fs.copyTpl(
