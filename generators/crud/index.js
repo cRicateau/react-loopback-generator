@@ -184,6 +184,24 @@ module.exports = generators.Base.extend({
         }));
       });
     },
+    installServerTemplate: function () {
+      Promise.all([
+        'server/services/excel-export.js',
+        'server/services/excel-export.test.js',
+        'server/services/excel-import.js',
+        'server/services/file-upload.js',
+        'server/mixins/disable-remote-methods.js',
+        'server/mixins/excel-export.js',
+        'server/mixins/excel-export.test.js',
+        'server/mixins/excel-import.js',
+        'server/mixins/excel-import.test.js',
+        'server/mixins/fullsearch.js',
+      ].map(file => {
+        return this.fs.copyTpl(
+          this.templatePath(file),
+          this.destinationPath(file));
+      }));
+    },
     createServices: function () {
       this.fs.copyTpl(
         this.templatePath('services/access-control.js'),
