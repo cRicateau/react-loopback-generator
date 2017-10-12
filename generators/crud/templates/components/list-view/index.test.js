@@ -18,6 +18,8 @@ describe('[Component] ListView', () => {
     export: () => {},
     deleteItem: () => {},
     navigateTo: () => {},
+    cancelErrorPopin: () => {},
+    count: () => {},
     routeName: 'referentiel-ae',
     errorPopinIsOpen: false,
     errorImportList: [],
