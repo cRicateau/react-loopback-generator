@@ -28,18 +28,7 @@ module.exports = generators.Base.extend({
       'server/boot/root.js',
       'server/boot/security.js',
       'server/components/logger.js',
-      'server/services/winston-config.js',
-      'server/services/disable-remote-methods.js',
-      'server/services/excel-export.js',
-      'server/services/excel-export.test.js',
-      'server/services/excel-import.js',
-      'server/services/file-upload.js',
-      'server/mixins/disable-remote-methods.js',
-      'server/mixins/exel-export.js',
-      'server/mixins/exel-export.test.js',
-      'server/mixins/exel-import.js',
-      'server/mixins/exel-import.test.js',
-      'server/mixins/fullsearch.js',
+      'server/services/winston-config.js'
     ].map(file => {
       return this.fs.copyTpl(
         this.templatePath(file),

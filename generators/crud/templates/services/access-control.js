@@ -3,7 +3,7 @@ import crudRoutes from '../crud-routes/crud-routes.json';
 
 export const canWrite = (userPerimeters, componentName) => {
   const route = find(
-    crudRoutes.active,
+    crudRoutes,
     crudRoute => crudRoute.componentName === componentName,
   );
 
@@ -14,7 +14,7 @@ export const canWrite = (userPerimeters, componentName) => {
 
 export const canRead = (userPerimeters, componentName) => {
   const route = find(
-    crudRoutes.active,
+    crudRoutes,
     crudRoute => crudRoute.componentName === componentName,
   );
 
@@ -24,7 +24,7 @@ export const canRead = (userPerimeters, componentName) => {
 };
 
 export const getUserRoutes = userPerimeters => {
-  const routes = filter(crudRoutes.active, route => {
+  const routes = filter(crudRoutes, route => {
     if (!route.ACL) return false;
     const _canRead = intersection(route.ACL.READ, userPerimeters).length > 0;
     const _canWrite = intersection(route.ACL.WRITE, userPerimeters).length > 0;

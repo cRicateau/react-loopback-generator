@@ -374,7 +374,7 @@ module.exports = generators.Base.extend({
     addCrudToJSON: function () {
       this.options.models.map(model => {
         const jsonPath = 'client/source/crud-routes/crud-routes.json';
-        const routes = this.fs.readJSON(jsonPath) || { active: [], inactive: [] };
+        const routes = this.fs.readJSON(jsonPath) || [] ;
         const name = kebabCase(model.name);
         const routeName = capitalize(lowerCase(model.name));
         const newCrudEntry = {
@@ -382,8 +382,8 @@ module.exports = generators.Base.extend({
           componentName: name,
           name: routeName,
         }
-        if (!find(routes.active, route => route.componentName === name)) {
-          routes.active.push(newCrudEntry);
+        if (!find(routes, route => route.componentName === name)) {
+          routes.push(newCrudEntry);
         };
         return this.fs.writeJSON(this.destinationPath(jsonPath), routes);
       })
