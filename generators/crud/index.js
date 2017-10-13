@@ -231,11 +231,11 @@ module.exports = generators.Base.extend({
     },
     createTableComponents: function () {
       return Promise.all([
-        { src: 'components/table-components/table-action-cell.jsx', dest: 'client/source/components/crud-view/table-action-cell.jsx' },
-        { src: 'components/table-components/table-action-cell.test.js', dest: 'client/source/components/crud-view/table-action-cell.test.js'},
-        { src: 'components/table-components/table-manager.jsx', dest: 'client/source/components/crud-view/table-manager.jsx'},
-        { src: 'components/table-components/table-manager.test.js', dest: 'client/source/components/crud-view/table-manager.test.js'},
-        { src: 'components/table-components/table-manager.css', dest: 'client/source/components/crud-view/table-manager.css'},
+        { src: 'crud-helpers/table-action-cell.jsx', dest: 'client/source/components/crud-view/table-action-cell.jsx' },
+        { src: 'crud-helpers/table-action-cell.test.js', dest: 'client/source/components/crud-view/table-action-cell.test.js'},
+        { src: 'crud-helpers/table-manager.jsx', dest: 'client/source/components/crud-view/table-manager.jsx'},
+        { src: 'crud-helpers/table-manager.test.js', dest: 'client/source/components/crud-view/table-manager.test.js'},
+        { src: 'crud-helpers/table-manager.css', dest: 'client/source/components/crud-view/table-manager.css'},
       ].map(file => {
         return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
       }));
@@ -255,10 +255,31 @@ module.exports = generators.Base.extend({
     createRootFiles: function() {
       return Promise.all([
           { src: 'routes.jsx', dest: 'client/source/routes.jsx'},
-          {src: 'crud-views/index.tmpl.js', dest: 'client/source/containers/models/index.js' },
-          {src: 'redux-files/index.js', dest: 'client/source/reducers/index.js'}
+          { src: 'crud-views/index.tmpl.js', dest: 'client/source/containers/models/index.js' },
+          { src: 'redux-files/index.js', dest: 'client/source/reducers/index.js'},
+          { src: 'root/index.jsx' , dest: 'client/source/containers/root/index.jsx'},
+          { src: 'root/root.test.jsx', dest: 'client/source/containers/root/root.test.jsx' }
         ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
       )
+    },
+    createNotificationFiles: function() {
+      return Promise.all([
+          { src: 'components/notification/notification.jsx', dest: 'client/source/components/root/notification.jsx'},
+          { src: 'components/notification/notification.test.js', dest: 'client/source/components/root/notification.test.js' },
+          { src: 'redux-files/notification.action.js', dest: 'client/source/actions/notification.js' },
+          { src: 'redux-files/notification.action.test.js', dest: 'client/source/actions/notification.test.js' },
+          { src: 'constants/notification.json', dest: 'client/source/constants/notification.json'},
+          { src: 'redux-files/notification.reducer.js', dest: 'client/source/reducers/notification.js'},
+          { src: 'redux-files/notification.reducer.test.js', dest: 'client/source/reducers/notification.test.js'},
+          { src: 'redux-files/reducers.json', dest: 'client/source/reducers/reducers.json'}
+        ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
+      )
+    },
+    configureStore: function() {
+      return this.fs.copyTpl(
+        this.templatePath('redux-files/configure-store.js'),
+        this.destinationPath('client/source/stores/configure-store.js')
+      );
     },
     createConstant: function () {
       this.options.models.map(model => {

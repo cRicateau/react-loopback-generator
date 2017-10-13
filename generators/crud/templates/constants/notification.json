@@ -1,0 +1,8 @@
+{
+    "OPEN": "OPEN_NOTIFICATION",
+    "CLOSE": "CLOSE_NOTIFICATION",
+    "success": "#28B463",
+    "error": "#E74C3C",
+    "warning": "#F1C40F"
+  }
+  
