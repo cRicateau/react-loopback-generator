@@ -7,7 +7,8 @@ export const canWrite = (userPerimeters, componentName) => {
     crudRoute => crudRoute.componentName === componentName,
   );
 
-  if (!route || !route.ACL || !route.ACL.WRITE) return false;
+  if (!route || !route.ACL) return true;
+  if (!route.ACL.WRITE) return false;
 
   return intersection(route.ACL.WRITE, userPerimeters).length > 0;
 };
@@ -18,14 +19,15 @@ export const canRead = (userPerimeters, componentName) => {
     crudRoute => crudRoute.componentName === componentName,
   );
 
-  if (!route || !route.ACL || !route.ACL.READ) return false;
+  if (!route || !route.ACL) return true;
+  if (!route.ACL.READ) return false;
 
   return intersection(route.ACL.READ, userPerimeters).length > 0;
 };
 
-export const getUserRoutes = userPerimeters => {
-  const routes = filter(crudRoutes, route => {
-    if (!route.ACL) return false;
+export const getUserRoutes = (userPerimeters) => {
+  const routes = filter(crudRoutes, (route) => {
+    if (!route.ACL) return true;
     const _canRead = intersection(route.ACL.READ, userPerimeters).length > 0;
     const _canWrite = intersection(route.ACL.WRITE, userPerimeters).length > 0;
 
