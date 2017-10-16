@@ -12,15 +12,17 @@ import fr from 'react-intl/locale-data/fr';
 import HeaderBar from '../../components/header-bar';
 import SideBar from '../../components/side-bar';
 import frMessages from '../../locale/locale-fr.json';
+import enMessages from '../../locale/locale-en.json';
 
 import { getUserPerimeters } from '../../selectors/user-perimeters.js';
-import Notification from '../../components/root/notification';
+import NotificationContainer from '../../components/root/notification';
 
 import * as AuthenticationEffect from '../../effects/authentication';
 import * as SideBarAction from '../../actions/side-bar';
 
 const locales = {
   fr: frMessages,
+  en: enMessages,
 };
 
 addLocaleData([...fr]);
@@ -55,7 +57,7 @@ export class Root extends Component {
             userPerimeters={this.props.userPerimeters}
           />
           {this.props.children}
-          <Notification />
+          <NotificationContainer />
         </div>
       </IntlProvider>
     );
@@ -96,7 +98,7 @@ function mapDispatchToProps(dispatch) {
   return {
     authenticationEffects: bindActionCreators(AuthenticationEffect, dispatch),
     sideBarActions: bindActionCreators(SideBarAction, dispatch),
-    navigateTo: path => {
+    navigateTo: (path) => {
       dispatch(push(path));
       dispatch(SideBarAction.close());
     },
@@ -104,3 +106,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Root);
+
