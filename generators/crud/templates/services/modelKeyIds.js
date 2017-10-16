@@ -1,4 +1,4 @@
-const getModelsIds = function(modelProperties) {
+const getModelsIds = function (modelProperties) {
   const modelKeyIds = Object.keys(
     modelProperties,
   ).reduce((acc, propertyKey) => {
@@ -7,6 +7,10 @@ const getModelsIds = function(modelProperties) {
     }
     return acc;
   }, []);
+
+  if (modelKeyIds.length === 0) {
+    return ['id'];
+  }
 
   return modelKeyIds;
 };
