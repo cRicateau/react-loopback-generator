@@ -14,6 +14,7 @@ export default {
           dispatch(this.findSuccess(response.data));
         })
         .catch(err => {
+          dispatch(this.notifyError('notification.list.error'));
           dispatch(this.findError(err));
         });
     };
@@ -159,7 +160,7 @@ export default {
 
   export(authentication) {
     return () => {
-      window.location.href = `<%= apiUrl %>/export?access_token=${authentication.id}`;
+      window.location.href = `<%= apiUrl %>/export?access_token=${authentication.id}`; // eslint-disable-line
       return Promise.resolve();
     };
   },

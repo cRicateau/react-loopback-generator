@@ -58,11 +58,8 @@ describe('[Mixin] Excel import', () => {
       const transactionOptions = {};
       return Model.deleteUnimportedRows(rows, transactionOptions)
       .then(() => {
-        Model.destroyAll.should.have.been.calledWithExactly({
-          NUM_BCE: {
-            nin: ['test', 'test2', 'test3']
-          }
-        }, transactionOptions);
+        Model.destroyAll.should.have.been.calledWithExactly({ id: 1 }, transactionOptions);
+        Model.destroyAll.should.have.been.calledWithExactly({ id: 2 }, transactionOptions);
       });
     });
   });
@@ -86,6 +83,8 @@ describe('[Mixin] Excel import', () => {
       { id: 3, label: 3 }
     ];
 
+    const userId = 9;
+
     beforeEach(() => {
       sandbox.stub(importService, 'extractRowsFromExcel').returns(excelRows);
       sandbox.stub(Model, 'isValidFile').returns(true);
@@ -97,11 +96,14 @@ describe('[Mixin] Excel import', () => {
       sandbox.stub(Model, 'updateOrCreateRow').returns(Promise.resolve());
       const dataMock = { someData: 'fake' };
 
-      return Model.handleFile(dataMock)
+      return Model.handleFile(dataMock, userId)
       .then(() => {
         importService.extractRowsFromExcel.should.have.been.calledWithExactly(dataMock);
         Model.updateOrCreateRow.should.have.been.calledThrice;
-        Model.deleteUnimportedRows.should.have.been.calledWithExactly(excelRows, { transaction });
+        Model.deleteUnimportedRows.should.have.been.calledWithExactly(
+          excelRows,
+          { transaction, excelImport: true, accessToken: { userId } }
+        );
         transaction.commit.should.have.been.calledWithExactly();
         transaction.rollback.should.not.have.been.called;
       });
@@ -110,7 +112,7 @@ describe('[Mixin] Excel import', () => {
     it('should rollback the transaction if an insert fails', () => {
       sandbox.stub(Model, 'updateOrCreateRow').returns(Promise.reject());
       const dataMock = { someData: 'fake' };
-      return Model.handleFile(dataMock)
+      return Model.handleFile(dataMock, userId)
       .then(() => {
         true.should.be.false;
       })

@@ -113,6 +113,13 @@ describe('[async actions] <%= actionFileName %>.js', () => {
       const store = mockStore({});
       const expectedActions = [
         { type: cst.FIND_REQUEST },
+        {
+          type: notificationCst.OPEN,
+          payload: {
+            message: 'notification.list.error',
+            notificationType: notificationCst.error,
+          },
+        },
         { type: cst.FIND_ERROR, payload: { status: 500, error: 'failed' } },
       ];
       return store.dispatch(modelActions.find()).then(() => {

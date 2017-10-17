@@ -32,6 +32,7 @@
     "notification.delete.error": "Erreur : Suppression impossible",
     "notification.import.success": "Import réussie",
     "notification.import.error": "Erreur : import impossible",
+    "notification.list.error": "Impossible de récupérer les éléments",
     "notification.edit.success": "Edition réussi",
     "notification.edit.error": "Erreur : Edition impossible",
     "notification.no_message": "Pas de message",

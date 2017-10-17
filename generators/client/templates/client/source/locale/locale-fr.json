@@ -33,6 +33,7 @@
   "notification.import.error": "Erreur : import impossible",
   "notification.edit.success": "Edition réussi",
   "notification.edit.error": "Erreur : Edition impossible",
+  "notification.list.error": "Impossible de récupérer les éléments",
   "notification.no_message": "Pas de message",
   "notification.error.not_found": "Elément introuvable",
   "list.table-manager.title": "Table :",

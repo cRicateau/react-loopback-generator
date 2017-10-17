@@ -28,7 +28,7 @@ module.exports = function(Model) {
         return fileUploadService.rejectIfFileIsNotValid(file);
       })
       .then(() => fileUploadService.rejectIfMimetypeIsNotAuthorized(file.buffer))
-      .then(() => Model.handleFile(file.buffer))
+      .then(() => Model.handleFile(file.buffer, req.sgUser.id))
       .then(() => res.status(successHttpCode).send())
       .catch(error => {
         if (error.errorList) {
@@ -90,8 +90,8 @@ module.exports = function(Model) {
     return errorList;
   };
 
-  Model.handleFile = function(data) {
-    let transactionOptions;
+  Model.handleFile = function(data, userId) {
+    let options;
 
     const excelRows = importService.extractRowsFromExcel(data);
     if (!Model.isValidFile(excelRows)) {
@@ -109,36 +109,43 @@ module.exports = function(Model) {
       return Promise.reject(validationError);
     }
 
-    return Model.beginTransaction({ isolationLevel: Model.Transaction.READ_COMMITTED })
+    return Model.beginTransaction({ isolationLevel: Model.Transaction.SERIALIZABLE })
       .then(tx => {
-        transactionOptions = { transaction: tx };
+        options = { transaction: tx, excelImport: true, accessToken: { userId } };
         return Promise.mapSeries(excelRows, row =>
-          Model.updateOrCreateRow(row, transactionOptions)
+          Model.updateOrCreateRow(row, options)
         );
       })
-      .then(() => Model.deleteUnimportedRows(excelRows, transactionOptions))
-      .then(() => transactionOptions.transaction.commit())
+      .then(() => Model.deleteUnimportedRows(excelRows, options))
+      .then(() => options.transaction.commit())
       .catch(() => {
-        transactionOptions.transaction.rollback();
+        options.transaction.rollback();
         const error = new Error('Import failed');
         throw error;
       });
   };
 
-  Model.updateOrCreateRow = function(row, transactionOptions) {
-    return Model.upsert(row, transactionOptions);
+  Model.updateOrCreateRow = function(row, options) {
+    return Model.upsert(row, options);
   };
 
   Model.deleteUnimportedRows = function (rows, transactionOptions) {
     const modelKeyId = Model.getModelKeyId();
     const importedRowIds = map(rows, modelKeyId);
 
-    return Model.destroyAll({
-      [modelKeyId]: {
-        nin: importedRowIds
+    return Model.find({
+      where: {
+        [modelKeyId]: {
+          nin: importedRowIds
+        }
       }
-    },
-      transactionOptions
+    }).then(
+      (data) => {
+          return Promise.mapSeries(data, row => {
+            return Model.destroyAll(row, transactionOptions);
+          }
+          );
+        }
     );
   };
 };
