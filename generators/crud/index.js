@@ -287,7 +287,20 @@ module.exports = generators.Base.extend({
     createLocaleFiles: function(){
       Promise.all([
         { src: 'locale/locale-en.json', dest: 'client/source/locale/locale-en.json'},
-        { src: 'locale/locale-fr.json', dest: 'client/source/locale/locale-fr.json'}        
+        { src: 'locale/locale-fr.json', dest: 'client/source/locale/locale-fr.json'},
+      ].map(file => {
+      return this.fs.copyTpl(
+        this.templatePath(file.src),
+        this.destinationPath(file.dest),
+        {
+          applicationName: this.config.get('applicationName')
+        }
+      );
+    }));
+    },
+    createDocs: function(){
+      Promise.all([
+        { src: 'doc/installation.md', dest: 'doc/installation.md'},
       ].map(file => {
       return this.fs.copyTpl(
         this.templatePath(file.src),
