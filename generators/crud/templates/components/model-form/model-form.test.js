@@ -28,6 +28,7 @@ describe('[Component] GenericModelForm', () => {
     handleSubmit: () => {},
     intl: {
       formatMessage: sinon.stub().returns('Obligatoire'),
+      formatDate: () => {}
     },
   };
 

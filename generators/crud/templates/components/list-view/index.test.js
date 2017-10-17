@@ -13,6 +13,7 @@ describe('[Component] ListView', () => {
   const defaultProps = {
     data: [],
     loading: false,
+    dataCount: 0,
     getList: () => {},
     import: () => {},
     export: () => {},

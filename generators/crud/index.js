@@ -66,7 +66,9 @@ module.exports = generators.Base.extend({
           plural: kebabCase(model.plural),
           base: "PersistedModel",
           mixins: {
-            DisableRemoteMethods: {},
+            DisableRemoteMethods: {
+              'except': ['find', 'findById', 'create', 'deleteById', 'replaceById', 'count']
+            },
             ExcelExport: {},
             ExcelImport: {}
           },
@@ -182,6 +184,24 @@ module.exports = generators.Base.extend({
         }));
       });
     },
+    installServerTemplate: function () {
+      Promise.all([
+        'server/services/excel-export.js',
+        'server/services/excel-export.test.js',
+        'server/services/excel-import.js',
+        'server/services/file-upload.js',
+        'server/mixins/disable-remote-methods.js',
+        'server/mixins/excel-export.js',
+        'server/mixins/excel-export.test.js',
+        'server/mixins/excel-import.js',
+        'server/mixins/excel-import.test.js',
+        'server/mixins/fullsearch.js',
+      ].map(file => {
+        return this.fs.copyTpl(
+          this.templatePath(file),
+          this.destinationPath(file));
+      }));
+    },
     createServices: function () {
       this.fs.copyTpl(
         this.templatePath('services/access-control.js'),
@@ -198,7 +218,7 @@ module.exports = generators.Base.extend({
         this.destinationPath(`client/source/selectors/user-perimeters.js`)
       );
     },
-    createModelForm: function()  {
+    createModelForm: function() {
       return Promise.all([
         { src: 'components/model-form/index.jsx', dest: 'client/source/components/crud-view/model-form/index.jsx'},
         { src: 'components/model-form/model-form.test.js', dest: 'client/source/components/crud-view/model-form/model-form.test.js'},
@@ -208,6 +228,94 @@ module.exports = generators.Base.extend({
       ].map(file => {
         return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
       }));
+    },
+    createTableComponents: function () {
+      return Promise.all([
+        { src: 'crud-helpers/table-action-cell.jsx', dest: 'client/source/components/crud-view/table-action-cell.jsx' },
+        { src: 'crud-helpers/table-action-cell.test.js', dest: 'client/source/components/crud-view/table-action-cell.test.js'},
+        { src: 'crud-helpers/table-manager.jsx', dest: 'client/source/components/crud-view/table-manager.jsx'},
+        { src: 'crud-helpers/table-manager.test.js', dest: 'client/source/components/crud-view/table-manager.test.js'},
+        { src: 'crud-helpers/table-manager.css', dest: 'client/source/components/crud-view/table-manager.css'},
+      ].map(file => {
+        return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
+      }));
+    },
+    createSideBar: function() {
+      return Promise.all([
+        this.fs.copyTpl(
+          this.templatePath('components/side-bar/index.jsx'),
+          this.destinationPath('client/source/components/side-bar/index.jsx')
+        ),
+        this.fs.copyTpl(
+          this.templatePath('components/side-bar/index.test.js'),
+          this.destinationPath('client/source/components/side-bar/index.test.js')
+        )
+      ]);
+    },
+    createNetworking: function(){
+      return Promise.all([
+        { src: 'redux-files/networking.js', dest: 'client/source/actions/networking.js' },
+        { src: 'redux-files/networking.test.js', dest: 'client/source/actions/networking.test.js'}
+      ].map(file => {
+        return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
+      })); 
+    },
+    createRootFiles: function() {
+      return Promise.all([
+          { src: 'routes.jsx', dest: 'client/source/routes.jsx'},
+          { src: 'crud-views/index.tmpl.js', dest: 'client/source/containers/models/index.js' },
+          { src: 'redux-files/index.js', dest: 'client/source/reducers/index.js'},
+          { src: 'root/index.jsx' , dest: 'client/source/containers/root/index.jsx'},
+          { src: 'root/root.test.jsx', dest: 'client/source/containers/root/root.test.js' },
+          { src: 'root/main.css', dest: 'client/source/main.css'}
+        ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
+      )
+    },
+    createNotificationFiles: function() {
+      return Promise.all([
+          { src: 'components/notification/notification.jsx', dest: 'client/source/components/root/notification.jsx'},
+          { src: 'components/notification/notification.test.js', dest: 'client/source/components/root/notification.test.js' },
+          { src: 'redux-files/notification.action.js', dest: 'client/source/actions/notification.js' },
+          { src: 'redux-files/notification.action.test.js', dest: 'client/source/actions/notification.test.js' },
+          { src: 'constants/notification.json', dest: 'client/source/constants/notification.json'},
+          { src: 'redux-files/notification.reducer.js', dest: 'client/source/reducers/notification.js'},
+          { src: 'redux-files/notification.reducer.test.js', dest: 'client/source/reducers/notification.test.js'},
+          { src: 'redux-files/reducers.json', dest: 'client/source/reducers/reducers.json'}
+        ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
+      )
+    },
+    createLocaleFiles: function(){
+      Promise.all([
+        { src: 'locale/locale-en.json', dest: 'client/source/locale/locale-en.json'},
+        { src: 'locale/locale-fr.json', dest: 'client/source/locale/locale-fr.json'},
+      ].map(file => {
+      return this.fs.copyTpl(
+        this.templatePath(file.src),
+        this.destinationPath(file.dest),
+        {
+          applicationName: this.config.get('applicationName')
+        }
+      );
+    }));
+    },
+    createDocs: function(){
+      Promise.all([
+        { src: 'doc/installation.md', dest: 'doc/installation.md'},
+      ].map(file => {
+      return this.fs.copyTpl(
+        this.templatePath(file.src),
+        this.destinationPath(file.dest),
+        {
+          applicationName: this.config.get('applicationName')
+        }
+      );
+    }));
+    },
+    configureStore: function() {
+      return this.fs.copyTpl(
+        this.templatePath('redux-files/configure-store.js'),
+        this.destinationPath('client/source/stores/configure-store.js')
+      );
     },
     createConstant: function () {
       this.options.models.map(model => {
@@ -221,7 +329,7 @@ module.exports = generators.Base.extend({
         );
       })
     },
-    createAction: function () {
+    createModelsActions: function () {
       this.options.models.map(model => {
         const actionFileName = kebabCase(model.name);
         const constantFileName = kebabCase(model.name);
@@ -354,7 +462,7 @@ module.exports = generators.Base.extend({
     addCrudToJSON: function () {
       this.options.models.map(model => {
         const jsonPath = 'client/source/crud-routes/crud-routes.json';
-        const routes = this.fs.readJSON(jsonPath) || { active: [], inactive: [] };
+        const routes = this.fs.readJSON(jsonPath) || [] ;
         const name = kebabCase(model.name);
         const routeName = capitalize(lowerCase(model.name));
         const newCrudEntry = {
@@ -362,11 +470,23 @@ module.exports = generators.Base.extend({
           componentName: name,
           name: routeName,
         }
-        if (!find(routes.active, route => route.componentName === name)) {
-          routes.active.push(newCrudEntry);
+        if (!find(routes, route => route.componentName === name)) {
+          routes.push(newCrudEntry);
         };
         return this.fs.writeJSON(this.destinationPath(jsonPath), routes);
       })
     },
   },
+  install: function() {
+    this.spawnCommandSync('npm', [
+      'install',
+      'multer',
+      'mmmagic',
+      'xlsx',
+      'redux-form',
+      'redux-form-material-ui',
+      'sinon-chai',
+      '--save'
+    ]);
+  }
 });
