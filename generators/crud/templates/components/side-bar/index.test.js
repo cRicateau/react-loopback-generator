@@ -61,7 +61,7 @@ describe('[Component] SideBar', () => {
 
       // Add a logout button as a list item
       expect(listComponent.find(ListItem).length).to.equal(
-        crudRoutes.active.length + 1,
+        crudRoutes.length + 1,
       );
     });
   });

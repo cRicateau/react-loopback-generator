@@ -248,9 +248,17 @@ module.exports = generators.Base.extend({
         ),
         this.fs.copyTpl(
           this.templatePath('components/side-bar/index.test.js'),
-          this.destinationPath('client/source/components/side-bar/index.test.jsx')
+          this.destinationPath('client/source/components/side-bar/index.test.js')
         )
       ]);
+    },
+    createNetworking: function(){
+      return Promise.all([
+        { src: 'redux-files/networking.js', dest: 'client/source/actions/networking.js' },
+        { src: 'redux-files/networking.test.js', dest: 'client/source/actions/networking.test.js'}
+      ].map(file => {
+        return this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest));
+      })); 
     },
     createRootFiles: function() {
       return Promise.all([
@@ -258,7 +266,8 @@ module.exports = generators.Base.extend({
           { src: 'crud-views/index.tmpl.js', dest: 'client/source/containers/models/index.js' },
           { src: 'redux-files/index.js', dest: 'client/source/reducers/index.js'},
           { src: 'root/index.jsx' , dest: 'client/source/containers/root/index.jsx'},
-          { src: 'root/root.test.jsx', dest: 'client/source/containers/root/root.test.jsx' }
+          { src: 'root/root.test.jsx', dest: 'client/source/containers/root/root.test.js' },
+          { src: 'root/main.css', dest: 'client/source/main.css'}
         ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
       )
     },
@@ -274,6 +283,20 @@ module.exports = generators.Base.extend({
           { src: 'redux-files/reducers.json', dest: 'client/source/reducers/reducers.json'}
         ].map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
       )
+    },
+    createLocaleFiles: function(){
+      Promise.all([
+        { src: 'locale/locale-en.json', dest: 'client/source/locale/locale-en.json'},
+        { src: 'locale/locale-fr.json', dest: 'client/source/locale/locale-fr.json'}        
+      ].map(file => {
+      return this.fs.copyTpl(
+        this.templatePath(file.src),
+        this.destinationPath(file.dest),
+        {
+          applicationName: this.config.get('applicationName')
+        }
+      );
+    }));
     },
     configureStore: function() {
       return this.fs.copyTpl(
@@ -315,13 +338,6 @@ module.exports = generators.Base.extend({
           templateVariables
         );
       });
-    },
-    createActions: function() {
-      return Promise.all([
-        { src: 'redux-files/networking.js', dest: 'actions/networking.js'},
-        { src: 'redux-files/networking.test.js', dest: 'actions/networking.test.js'}]
-        .map(file => this.fs.copyTpl(this.templatePath(file.src), this.destinationPath(file.dest)))
-      )
     },
     createReducer: function () {
       this.options.models.map(model => {
@@ -456,6 +472,7 @@ module.exports = generators.Base.extend({
       'xlsx',
       'redux-form',
       'redux-form-material-ui',
+      'sinon-chai',
       '--save'
     ]);
   }
