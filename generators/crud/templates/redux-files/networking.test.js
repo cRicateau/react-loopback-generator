@@ -1,17 +1,16 @@
 import expect from 'expect';
-import * as actions from './networking';
-import cst from '../constants/networking';
+import * as action from './networking';
 
 describe('[Action] Networking', () => {
   it('networking should create NETWORKING_START action', () => {
-    expect(actions.start()).toEqual({
-      type: cst.START,
+    expect(action.start()).toEqual({
+      type: 'NETWORKING_START',
     });
   });
 
   it('networking should create NETWORKING_STOP action', () => {
-    expect(actions.stop()).toEqual({
-      type: cst.STOP,
+    expect(action.stop()).toEqual({
+      type: 'NETWORKING_STOP',
     });
   });
 });

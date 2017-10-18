@@ -17,7 +17,7 @@ describe('[Component] TableActionCell', () => {
     modelBasePath: 'ae-data',
   };
 
-  const setup = (propsOverride) => {
+  const setup = propsOverride => {
     const finalProps = Object.assign(defaultProps, propsOverride);
     const shallowWrapper = shallow(<TableActionCell {...finalProps} />);
     const editButton = shallowWrapper.find(IconButton).first();

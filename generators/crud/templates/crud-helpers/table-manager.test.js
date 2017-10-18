@@ -15,6 +15,8 @@ describe('[Component] TableManager', () => {
     intl: {
       formatMessage: () => {},
     },
+    export: () => {},
+    hasEditRights: true,
   };
 
   const setup = propsOverride => {
@@ -49,7 +51,7 @@ describe('[Component] TableManager', () => {
         .find(RaisedButton)
         .at(0)
         .simulate('click');
-      expect(routeSpy.calledWith('/bce-data/create')).to.be.true; // eslint-disable-line
+      expect(routeSpy.calledWith("/bce-data/create")).to.be.true; // eslint-disable-line
     });
 
     it('should call the export props when the export button is clicked', () => {

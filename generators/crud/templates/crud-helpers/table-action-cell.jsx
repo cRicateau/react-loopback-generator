@@ -19,17 +19,26 @@ const inlineStyles = {
   },
 };
 
-export const TableActionCell = ({ row, navigateTo, modelBasePath, deleteElement }) => (
+export const TableActionCell = ({
+  row,
+  navigateTo,
+  modelBasePath,
+  deleteElement,
+}) => (
   <div>
     <IconButton
-      onClick={() => { navigateTo(`${modelBasePath}/edit/${row.value}`); }}
+      onClick={() => {
+        navigateTo(`${modelBasePath}/edit/${row.value}`);
+      }}
       style={inlineStyles.iconButtonStyle}
       iconStyle={inlineStyles.iconStyle}
     >
       <EditorModeEdit />
     </IconButton>
     <IconButton
-      onClick={() => { deleteElement(row.value); }}
+      onClick={() => {
+        deleteElement(row.value);
+      }}
       style={inlineStyles.iconButtonStyle}
       iconStyle={inlineStyles.iconStyle}
     >
@@ -42,8 +51,8 @@ export default TableActionCell;
 
 TableActionCell.propTypes = {
   row: PropTypes.shape({
-    value: PropTypes.number.isRequired,
-  }).isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  }),
   navigateTo: PropTypes.func.isRequired,
   deleteElement: PropTypes.func.isRequired,
   modelBasePath: PropTypes.string,

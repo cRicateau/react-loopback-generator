@@ -379,28 +379,38 @@ module.exports = generators.Base.extend({
       this.options.models.map(model => {
         const containerFolder = kebabCase(model.name);
         return Promise.all([
-          this.fs.copyTpl(
-            this.templatePath('crud-views/list-view.tmpl.js'),
-            this.destinationPath(`client/source/containers/models/${containerFolder}/list-view/index.jsx`),
-            {
-              modelName: kebabCase(model.name),
-              modelTitleName: model.title,
-              actionPrefix: model.name.toUpperCase(),
-            }
-          ),
-          this.fs.copy(
-            this.templatePath('components/list-view/styles.css'),
-            this.destinationPath(`client/source/components/crud-view/list-view/styles.css`)
-          ),
-          this.fs.copy(
-            this.templatePath('components/list-view/index.jsx'),
-            this.destinationPath(`client/source/components/crud-view/list-view/index.jsx`)
-          ),
-          this.fs.copy(
-            this.templatePath('components/list-view/index.test.js'),
-            this.destinationPath(`client/source/components/crud-view/list-view/index.test.js`)
-          ),
-        ]);
+          {
+            src: 'crud-views/list-view.tmpl.js',
+            dest: `client/source/containers/models/${containerFolder}/list-view/index.jsx`
+          },
+          {
+            src: 'components/list-view/styles.css',
+            dest: 'client/source/components/crud-view/list-view/styles.css'
+          },
+          {
+            src: 'components/list-view/index.jsx',
+            dest: 'client/source/components/crud-view/list-view/index.jsx'
+          },
+          {
+            src: 'components/list-view/index.test.js',
+            dest: 'client/source/components/crud-view/list-view/index.test.js'
+          },
+          {
+            src: 'client/source/services/find-filter-service.js',
+            dest: 'client/source/services/find-filter-service.js'
+          }
+        ].map(file => {
+            return this.fs.copyTpl(
+              this.templatePath(file.src),
+              this.destinationPath(file.dest),
+              {
+                modelName: kebabCase(model.name),
+                modelTitleName: model.title,
+                actionPrefix: model.name.toUpperCase(),
+              }
+            );
+          })
+        );
       });
     },
     editView: function() {

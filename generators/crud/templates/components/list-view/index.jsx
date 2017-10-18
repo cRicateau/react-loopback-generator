@@ -12,6 +12,7 @@ import FlatButton from 'material-ui/FlatButton';
 import TableManager from '../table-manager';
 import TableActionCell from '../table-action-cell';
 import styles from './styles.css';
+import { getFindFilter } from '../../../services/find-filter-service';
 
 export default class ListView extends Component {
   constructor(props, context) {
@@ -85,48 +86,13 @@ export default class ListView extends Component {
   };
 
   fetchData = reactTableState => {
-    const { sorted, filtered } = reactTableState;
-    let findFilter = {
-      'filter[limit]': reactTableState.pageSize,
-      'filter[skip]': reactTableState.page * reactTableState.pageSize,
-    };
-
-    if (sorted.length !== 0) {
-      reactTableState.sorted.forEach((filter, index) => {
-        const propertyName = filter.id;
-        const order = filter.desc ? 'DESC' : 'ASC';
-        const customSort = `${propertyName} ${order}`;
-        findFilter = { ...findFilter, [`filter[order][${index}]`]: customSort };
-      });
-    }
-
-    let countFilter, value;
-    if (filtered.length !== 0) {
-      reactTableState.filtered.forEach(filter => {
-        const propertyName = filter.id;
-        value = parseFloat(filter.value) || filter.value;
-        if (isFinite(value)) {
-          findFilter = {
-            ...findFilter,
-            [`filter[where][${propertyName}][like]`]: `%${value}%`,
-          };
-          countFilter = {
-            [`where[${propertyName}][like]`]: `%${value}%`,
-          };
-        } else {
-          const filterRegex = `/${filter.value}.?/i`;
-          findFilter = {
-            ...findFilter,
-            [`filter[where][${propertyName}][regexp]`]: filterRegex,
-          };
-          countFilter = {
-            ...countFilter,
-            [`where[${propertyName}][regexp]`]: filterRegex,
-          };
-        }
-      });
-    }
-
+    const { sorted, filtered, pageSize, page } = reactTableState;
+    const { findFilter, countFilter } = getFindFilter(
+      page,
+      pageSize,
+      sorted,
+      filtered,
+    );
     this.props.getList(findFilter);
     this.props.count(countFilter || '');
     this.setState({

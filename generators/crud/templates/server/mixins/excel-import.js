@@ -2,8 +2,9 @@ const Promise = require('bluebird');
 const { map, findKey, intersection } = require('lodash');
 const importService = require('../services/excel-import');
 const fileUploadService = require('../services/file-upload');
+const logger = require('../services/winston-config')();
 
-module.exports = function(Model) {
+module.exports = function(Model) { // eslint-disable-line
   const successHttpCode = 204;
   const badRequestHttpCode = 400;
   const unprocessableHttpCode = 422;
@@ -72,23 +73,24 @@ module.exports = function(Model) {
     return (row[key].length > Model.definition.properties[key].length);
   };
 
-  Model.validateData = function(rows) {
-    const errorList = [];
-    rows.forEach((row, lineIndex) => {
-      for (const key of Object.keys(row)) {
-        const offset = 2;
-        const userFriendlyRowIndex = lineIndex + offset;
-
-        if (Model.isRowInvalidType(key, row)) {
-          errorList.push({ type: 'Format', line: userFriendlyRowIndex, column: key });
+  if (!Model.validateData) {
+    Model.validateData = function(rows) {
+      const errorList = [];
+      rows.forEach((row, lineIndex) => {
+        for (const key of Object.keys(row)) {
+          const offset = 2;
+          const userFriendlyRowIndex = lineIndex + offset;
+          if (Model.isRowInvalidType(key, row)) {
+            errorList.push({ type: 'Format', line: userFriendlyRowIndex, column: key });
+          }
+          if (Model.isRowInvalidLength(key, row)) {
+            errorList.push({ type: 'Longueur', line: userFriendlyRowIndex, column: key });
+          }
         }
-        if (Model.isRowInvalidLength(key, row)) {
-          errorList.push({ type: 'Longueur', line: userFriendlyRowIndex, column: key });
-        }
-      }
-    });
-    return errorList;
-  };
+      });
+      return errorList;
+    };
+  }
 
   Model.handleFile = function(data, userId) {
     let options;
@@ -118,34 +120,38 @@ module.exports = function(Model) {
       })
       .then(() => Model.deleteUnimportedRows(excelRows, options))
       .then(() => options.transaction.commit())
-      .catch(() => {
+      .catch(err => {
+        logger.error(err);
         options.transaction.rollback();
         const error = new Error('Import failed');
         throw error;
       });
   };
 
-  Model.updateOrCreateRow = function(row, options) {
-    return Model.upsert(row, options);
-  };
+  if (!Model.updateOrCreateRow) {
+    Model.updateOrCreateRow = function(row, options) {
+      return Model.upsert(row, options);
+    };
+  }
 
-  Model.deleteUnimportedRows = function (rows, transactionOptions) {
-    const modelKeyId = Model.getModelKeyId();
-    const importedRowIds = map(rows, modelKeyId);
+  if (!Model.deleteUnimportedRows) {
+    Model.deleteUnimportedRows = function (rows, transactionOptions) {
+      const modelKeyId = Model.getModelKeyId();
+      const importedRowIds = map(rows, modelKeyId);
 
-    return Model.find({
-      where: {
-        [modelKeyId]: {
-          nin: importedRowIds
+      return Model.find({
+        where: {
+          [modelKeyId]: {
+            nin: importedRowIds
+          }
         }
-      }
-    }).then(
-      (data) => {
+      })
+      .then(data => {
           return Promise.mapSeries(data, row => {
             return Model.destroyAll(row, transactionOptions);
-          }
-          );
+          });
         }
-    );
-  };
+      );
+    };
+  }
 };

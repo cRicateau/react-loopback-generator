@@ -1,4 +1,4 @@
-const getModelsIds = function (modelProperties) {
+const getModelsIds = function(modelProperties) {  
   const modelKeyIds = Object.keys(
     modelProperties,
   ).reduce((acc, propertyKey) => {

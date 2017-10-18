@@ -25,8 +25,8 @@ export const canRead = (userPerimeters, componentName) => {
   return intersection(route.ACL.READ, userPerimeters).length > 0;
 };
 
-export const getUserRoutes = (userPerimeters) => {
-  const routes = filter(crudRoutes, (route) => {
+export const getUserRoutes = userPerimeters => {
+  const routes = filter(crudRoutes, route => {
     if (!route.ACL) return true;
     const _canRead = intersection(route.ACL.READ, userPerimeters).length > 0;
     const _canWrite = intersection(route.ACL.WRITE, userPerimeters).length > 0;
