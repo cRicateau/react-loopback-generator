@@ -46,7 +46,7 @@ export default class EditView extends Component {
             modelProperties={model.properties}
             onSubmit={this.submitModelEdit}
             modelKeyIds={modelKeyIds}
-            disableModelKeyIds={true}
+            disableModelKeyId={true}
           />
         </div>
       </div>
