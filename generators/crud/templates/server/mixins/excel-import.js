@@ -66,25 +66,42 @@ module.exports = function(Model) { // eslint-disable-line
   };
 
   Model.isRowInvalidType = (key, row) => {
-    return Model.getPropertyType(key) === 'Number' && !importService.isNumeric(row[key]);
+    if (!row[key]) return false;
+    return Model.getPropertyType(key).toLowerCase() === 'number' &&
+    !importService.isNumeric(row[key]);
   };
 
   Model.isRowInvalidLength = (key, row) => {
+    if (!row[key]) return false;
     return (row[key].length > Model.definition.properties[key].length);
+  };
+
+  Model.isCellEmptyButRequired = (key, row) => {
+    if (!Model.definition.properties[key].required) {
+      return false;
+    }
+    return !row[key];
   };
 
   if (!Model.validateData) {
     Model.validateData = function(rows) {
       const errorList = [];
+      const targetHeader = Object.keys(Model.definition.properties);
       rows.forEach((row, lineIndex) => {
-        for (const key of Object.keys(row)) {
-          const offset = 2;
-          const userFriendlyRowIndex = lineIndex + offset;
+        const offset = 2;
+        const userFriendlyRowIndex = lineIndex + offset;
+        for (const key of targetHeader) {
+          if (Model.isCellEmptyButRequired(key, row)) {
+            errorList.push({ type: 'required', line: userFriendlyRowIndex, column: key });
+            return;
+          }
           if (Model.isRowInvalidType(key, row)) {
-            errorList.push({ type: 'Format', line: userFriendlyRowIndex, column: key });
+            errorList.push({ type: 'format', line: userFriendlyRowIndex, column: key });
+            return;
           }
           if (Model.isRowInvalidLength(key, row)) {
-            errorList.push({ type: 'Longueur', line: userFriendlyRowIndex, column: key });
+            errorList.push({ type: 'length', line: userFriendlyRowIndex, column: key });
+            return;
           }
         }
       });
