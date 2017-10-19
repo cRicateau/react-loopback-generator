@@ -37,7 +37,7 @@ export class GenericModelForm extends Component {
           if (modelKeyIds.includes(propertyName) && disableModelKeyId) {
             disabled = true;
           }
-          switch (property.type) {
+          switch (property.type.toLowerCase()) {
             case 'string':
               return (
                 <div key={propertyName} className={styles.textField}>
