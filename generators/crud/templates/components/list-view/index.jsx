@@ -65,7 +65,7 @@ export default class ListView extends Component {
     const formatMessage = this.props.intl.formatMessage;
     return errorArray.map(error => (
       <li key={`${error.line}-${error.column}`}>
-        {formatMessage({ id: 'error.import.type' })} {error.type}
+        {formatMessage({ id: `error.import.type.${error.type}` })}
         {formatMessage({ id: 'error.import.line' })} {error.line}
         {formatMessage({ id: 'error.import.column' })} {error.column}
       </li>

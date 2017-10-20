@@ -18,6 +18,7 @@ export default class SideBar extends Component {
 
   render() {
     const routes = this.getRoutes();
+    const listItemStyle = { padding: 8 };
 
     return (
       <Drawer
@@ -33,11 +34,13 @@ export default class SideBar extends Component {
           {routes.map(crudRoute => (
             <ListItem
               key={crudRoute.name}
+              innerDivStyle={listItemStyle}
               onTouchTap={() => this.props.navigateTo(`${crudRoute.path}/list`)}
               primaryText={crudRoute.name}
             />
           ))}
           <ListItem
+            innerDivStyle={listItemStyle}
             onTouchTap={this.props.onLogout}
             primaryText={<FormattedMessage id="authentication.logout" />}
           />

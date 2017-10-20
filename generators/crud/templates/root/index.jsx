@@ -29,6 +29,7 @@ addLocaleData([...fr]);
 
 export class Root extends Component {
   componentWillMount() {
+    this.props.sideBarActions.open();
     this.props.authenticationEffects.login().catch(() => {
       // To avoid 401 error when page loaded from cache
       window.location.reload(true);

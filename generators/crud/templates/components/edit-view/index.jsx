@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import IconButton from 'material-ui/IconButton';
-import ActionList from 'material-ui/svg-icons/action/list';
+import ActionList from 'material-ui/svg-icons/navigation/arrow-back';
 
 import ModelForm from '../model-form';
 
