@@ -170,6 +170,7 @@ export default class ListView extends Component {
           ofText={formatMessage({ id: 'list.of' })}
           rowsText={formatMessage({ id: 'list.rows' })}
           getTrProps={() => ({ style: { height: '35px' } })}
+          getTableProps={() => ({ style: { flex: 'auto 1' } })} // fix display bug for IE
         />
         <Dialog
           title={formatMessage({ id: 'list.delete_popin.title' })}
